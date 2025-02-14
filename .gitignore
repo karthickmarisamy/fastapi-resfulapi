@@ -1,0 +1,6 @@
+fast-api-3.13/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.env
