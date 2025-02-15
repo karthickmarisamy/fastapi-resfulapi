@@ -1,18 +1,26 @@
-from sqlalchemy import create_engine
+import asyncmy
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import pymysql
-import os
+from config.config import config
 
-DATABASE_URL = f"mysql+pymysql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@localhost:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+DATABASE_URL = f"mysql+asyncmy://{config.DB_USERNAME}:{config.DB_PASSWORD}@localhost:{config.DB_PORT}/{config.DB_NAME}"
 
-engine = create_engine(DATABASE_URL)
-sessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+engine = create_async_engine(
+    DATABASE_URL,
+    pool_size = 5,
+    max_overflow = 10,
+    pool_timeout = 30,
+    pool_recycle = 1800, ## in seconds
+    echo = False
+)
+
+sessionLocal = sessionmaker(bind=engine, class_=AsyncSession, autocommit=False, autoflush=False)
 base_model = declarative_base()
 
-def get_db():
+async def get_db():
     db = sessionLocal()
     try: 
         yield db
     finally:
-        db.close()
+        await db.close()
