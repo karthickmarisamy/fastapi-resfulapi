@@ -5,3 +5,4 @@ pymysql
 pydantic
 pydantic[email]
 python-dotenv
+asyncmy
