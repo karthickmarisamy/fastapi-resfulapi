@@ -1,11 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from fastapi import APIRouter
 from schemas.student_schema import StudentSchema
-from db.database import get_db
-from models.student_model import Personal_detail
-from utils.response_wrapper import api_response
-from datetime import datetime
 
 router = APIRouter()
 

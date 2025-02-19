@@ -4,19 +4,30 @@ from models.student_model import Personal_detail
 from datetime import datetime
 
 class StudentRepository:
+    
     def __init__(self, db_session: AsyncSession):
+        
         self.db_session = db_session
+        
+    async def user_exists(self, email_id: str):
+        
+        result = await self.db_session(select(Personal_detail).filter(email_id = Personal_detail.email))
+        return result.scalar().first() is not None
     
     async def save_user(self, user: Personal_detail):
-        result = await self.db_session.execute(select(Personal_detail).filter(Personal_detail.email == user.email))
-        exists = result.scalars().first()
-        if not exists:
-            self.db_session.add(user)
-            await self.db_session.commit()
+    
+        if await self.user_exists(self, user.email):
+            raise ValueError(f"{user.email} is already exists")
+       
+        self.db_session.add(user)
+        await self.db_session.commit()
+    
+    async def get_all_users(self):
+        
+        result = self.db_session(select(Personal_detail))
+        return result.scalar().all()
             
         
-router = APIRouter()
-
 @router.post('/student')
 async def create_student(student: StudentSchema, db: AsyncSession = Depends(get_db)):
     
