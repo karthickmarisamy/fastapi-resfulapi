@@ -1,79 +1,44 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from schemas.student_schema import StudentSchema
-from db.database import get_db
+from validation.student_schema import StudentSchema
 from models.student_model import Personal_detail
 from utils.response_wrapper import api_response
-from datetime import datetime
+from repository.student_repository import StudentRepository
 
-router = APIRouter()
-
-@router.post('/student')
-async def create_student(student: StudentSchema, db: AsyncSession = Depends(get_db)):
+class StudentService:
     
-    result = await db.execute(select(Personal_detail).filter(Personal_detail.email == student.email))
-    exists = result.scalars().first()
+    def __init__(self, user_repo: StudentRepository):
+        self.user_repo = user_repo
     
-    if exists:
-        raise HTTPException(status_code = 400, detail = "Email Id is already registered")
-
-    new_student = Personal_detail(**student.dict())
+    async def create_user(self, student: StudentSchema):
+        
+        new_user = Personal_detail(student)
+        await self.user_repo.save_user(new_user)
+        
+        if new_user.id != None:
+            return api_response(data = new_user, message = "New Student record is created successfully")
+        
+        return api_response(message = "Failed", status = False)
     
-    db.add(new_student)
-    await db.commit()
-    await db.refresh(new_student)
+    async def get_all_users(self):
+        return api_response(
+            data = await self.user_repo.get_all_users(), 
+            message = "Success"
+        )
     
-    return api_response(data=new_student, message="New Student record is created successfully")
-
-@router.get('/student')
-async def get_all_students(db: AsyncSession = Depends(get_db)):
+    async def get_user(self, id: str):
+        return api_response(
+            data = await self.user_repo.get_user(id), 
+            message = "Success"
+        ) 
     
-    result = await db.execute(select(Personal_detail))
-    student_info = result.scalars().all()
-    return api_response(data=student_info, message="All student personal details are retrieved successfully")
-
-@router.get('/student/{student_id}')
-async def get_student_info(student_id: str, db: AsyncSession = Depends(get_db)):
+    async def update_user(self, id: str, student: StudentSchema):
+        return api_response(
+            data = await self.user_repo.update_user(id, student), 
+            message = "Success"
+        )
     
-    result = await db.execute(select(Personal_detail).filter(Personal_detail.id == student_id))
-    student_info = result.scalars().first()
-    
-    if student_info is None:
-        raise HTTPException(status_code = 400, detail = "Invalid student id")
-    
-    return api_response(data = student_info, message = "Student record is retrieved successfully")
-
-@router.put('/student/{student_id}')
-async def update_student_info(student_id: str, student:StudentSchema, db: AsyncSession = Depends(get_db)):
-    
-    result = await db.execute(select(Personal_detail).filter(Personal_detail.id == student_id))
-    existing_record = result.scalars().first()
-    
-    if not existing_record:
-        raise HTTPException(status_code = 404, detail = "Student id is not found")        
-    
-    student.updated_on = datetime.now()
-    
-    for field, value in student.dict(exclude_unset= True).items():
-        setattr(existing_record, field, value)
-    
-    db.add(existing_record)
-    await db.commit()
-    await db.refresh(existing_record)
-    
-    return api_response(data = existing_record, message = "Student info has been updated successfully")
-
-@router.delete('/student/{student_id}')
-async def delete_student_info(student_id : str, db: AsyncSession = Depends(get_db)):
-    
-    existing_student = await db.execute(select(Personal_detail).filter(student_id == Personal_detail.id))
-    existing_student = existing_student.scalars().first()
-    
-    if not existing_student:
-        raise HTTPException(status_code = 404, detail = "Student is not found")
-    
-    await db.delete(existing_student)
-    await db.commit()
-    
-    return api_response(message = "Sudent info is deleted successfully")
+    async def remove_user(self, id: str):
+        
+        await self.user_repo.remove_user(id)
+        return api_response( 
+            message = "User info is removed successfully"
+        )
