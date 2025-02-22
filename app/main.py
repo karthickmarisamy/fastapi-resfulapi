@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.middleware import LoggingMiddleware
-from controllers.student_controller import router as student_router
+from api.v1.student_controller import router as student_router
 
 app = FastAPI()
 

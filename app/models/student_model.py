@@ -14,3 +14,6 @@ class Personal_detail(base_model):
     age = Column(Integer, nullable=False)
     created_on = Column(DateTime, default=datetime.datetime.now)
     updated_on = Column(DateTime, nullable=True)
+    
+    class Config:
+        orm_mode = True
