@@ -16,22 +16,10 @@ async def get_student_info(id: str, user_service: StudentService = Depends(Stude
 async def create_student(student: StudentSchema, user_service: StudentService = Depends(StudentService)):
     return await user_service.create_user(student)
 
-'''@router.post('/student', response_model = None)
-async def create_student(student: StudentSchema, user_service: StudentService = Depends()) -> any:
-    return await user_service.create_user(student)
+@router.delete('/student/{id}')
+async def delete_student_info(id: str, user_service: StudentService = Depends(StudentService)):
+    return await user_service.remove_user(id)
 
-@router.get('/student')
-async def get_all_students(id: str, user_service: StudentService = Depends()) -> any:
-    return await user_service.get_all_users(id)
-
-@router.get('/student/{student_id}')
-async def get_student_info(id: str, user_service: StudentService = Depends()) -> any:
-    return await user_service.get_user(id)    
-
-@router.put('/student/{student_id}')
-async def update_student_info(id: str, student: StudentSchema, user_service: StudentService = Depends()) -> any:
+@router.put('/student/{id}')
+async def update_student_info(id: str, student: StudentSchema, user_service: StudentService = Depends(StudentService)):
     return await user_service.update_user(id, student)
-
-@router.delete('/student/{student_id}')
-async def delete_student_info(id: str, student: StudentSchema, user_service: StudentService = Depends()) -> any:
-    return await user_service.update_user(id, student) '''

@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 class StudentSchema(BaseModel):
+    
     id: Optional[str] = None
     name: Optional[str] = None
     phone_number: Optional[str] = None
@@ -12,5 +13,4 @@ class StudentSchema(BaseModel):
     created_on: Optional[datetime] = None
         
     class Config:
-        orm_mode= True
         from_attributes = True

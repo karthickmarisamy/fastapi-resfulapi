@@ -1,4 +1,5 @@
-def api_response(data={}, status=True, error=False, message="success"):
+def api_response(data=[], status=True, error=False, message="success"):
+    
     return {
         "status": status,
         "error": error,

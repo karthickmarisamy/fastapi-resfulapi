@@ -16,4 +16,4 @@ class Personal_detail(base_model):
     updated_on = Column(DateTime, nullable=True)
     
     class Config:
-        orm_mode = True
+        from_attributes = True
