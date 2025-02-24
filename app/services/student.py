@@ -19,10 +19,11 @@ class StudentService:
     
     async def get_user(self, id: str):
         
-        return api_response(
+        return await self.student_repo.get_user(id)
+        '''return api_response(
             data = await self.student_repo.get_user(id), 
             message = "Success"
-        )
+        )'''
         
     async def create_user(self, student: StudentSchema):
         
