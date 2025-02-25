@@ -39,7 +39,7 @@ async def get_student_info(id: str, user_service: StudentService = Depends(Stude
             message = "Success"
         )
 
-@router.post('/student')
+@router.post('/student', response_model = StandardResponse)
 async def create_student(student: StudentSchema, user_service: StudentService = Depends(StudentService)):
     user =  await user_service.create_user(student)
     
@@ -59,7 +59,7 @@ async def create_student(student: StudentSchema, user_service: StudentService = 
         ).dict())  
         
 
-@router.delete('/student/{id}')
+@router.delete('/student/{id}', response_model = StandardResponse)
 async def delete_student_info(id: str, user_service: StudentService = Depends(StudentService)):
 
     user =  await user_service.remove_user(id)
@@ -78,7 +78,7 @@ async def delete_student_info(id: str, user_service: StudentService = Depends(St
                 message = user['message']
         ).dict())  
 
-@router.put('/student/{id}')
+@router.put('/student/{id}', response_model = StandardResponse)
 async def update_student_info(id: str, student: StudentSchema, user_service: StudentService = Depends(StudentService)):
 
     user =  await user_service.update_user(id, student)
