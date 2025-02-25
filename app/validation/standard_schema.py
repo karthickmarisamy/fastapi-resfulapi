@@ -1,9 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Generic, TypeVar
 
-class StandardResponse(BaseModel):
+T = TypeVar('T')
+
+class StandardResponse(BaseModel, Generic[T]):
     
-    status: str
-    data: Optional[dict] = None
+    status: bool
+    data: Optional[T] = None
     message: Optional[str] = None
     

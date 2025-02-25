@@ -47,7 +47,7 @@ class StudentRepository:
             await self.db_session.commit()
     
             if result.rowcount > 0:
-                return {"message": "Delete successfully", "status": False}  
+                return {"message": "Delete successfully", "status": True}  
             else:
                 return {"message": "Id is not found", "status": False}
             
@@ -69,9 +69,12 @@ class StudentRepository:
             await self.db_session.commit()
             
             if result.rowcount > 0:
+                
+                user_info = await self.get_user(id)
                 return {
                     "message": "User info has been updated successfully",
-                    "status": True
+                    "status": True,
+                    "data": user_info
                     }
             else: 
                 return {
