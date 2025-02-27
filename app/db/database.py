@@ -1,17 +1,16 @@
-import asyncmy
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config.config import config
+from config.config import settings
 from sqlalchemy.engine.url import URL
 
 DATABASE_URL = URL.create(
     drivername = "mysql+asyncmy",
-    username = config.DB_USERNAME,
-    password = config.DB_PASSWORD,
-    host = config.DB_HOST,
-    port = config.DB_PORT,
-    database = config.DB_NAME
+    username = settings.DB_USERNAME,
+    password = settings.DB_PASSWORD,
+    host = settings.DB_HOST,
+    port = settings.DB_PORT,
+    database = settings.DB_NAME
 )
 
 engine = create_async_engine(

@@ -11,6 +11,7 @@ class Personal_detail(base_model):
     name = Column(String(100), nullable=False)
     phone_number = Column(String(12), nullable=False)
     email = Column(String(50), nullable=False)
+    hashed_password = Column(String)
     age = Column(Integer, nullable=False)
     created_on = Column(DateTime, default=datetime.datetime.now)
     updated_on = Column(DateTime, nullable=True)

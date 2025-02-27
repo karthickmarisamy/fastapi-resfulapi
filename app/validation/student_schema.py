@@ -8,6 +8,7 @@ class StudentSchema(BaseModel):
     name: Optional[str] = None
     phone_number: Optional[str] = None
     email: Optional[EmailStr] = None
+    hashed_password: str
     age: Optional[int] = None
     updated_on: Optional[datetime] = None
     created_on: Optional[datetime] = None
