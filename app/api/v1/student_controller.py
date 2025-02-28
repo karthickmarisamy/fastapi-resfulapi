@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from services.student import StudentService
-from validation.student_schema import StudentSchema
+from validation.student_schema import StudentSchema, UserResponseSchema
 from validation.standard_schema import StandardResponse
 
 router = APIRouter()
@@ -10,7 +10,7 @@ router = APIRouter()
 async def get_all_students(user_service: StudentService = Depends(StudentService)):
     
     users = await user_service.get_all_users()
-    users_serialized = [StudentSchema.from_orm(user) for user in users]
+    users_serialized = [UserResponseSchema.from_orm(user) for user in users]
 
     return StandardResponse(
         status = True,
@@ -35,7 +35,7 @@ async def get_student_info(id: str, user_service: StudentService = Depends(Stude
     
     return StandardResponse(
             status = True,
-            data = StudentSchema.from_orm(user),
+            data = UserResponseSchema.from_orm(user),
             message = "Success"
         )
 
@@ -47,7 +47,7 @@ async def create_student(student: StudentSchema, user_service: StudentService = 
 
         return StandardResponse(
             status = True,
-            data = StudentSchema.from_orm(user['data']),
+            data = UserResponseSchema.from_orm(user['data']),
             message = user['message']
         ) 
     

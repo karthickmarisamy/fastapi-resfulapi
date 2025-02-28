@@ -1,5 +1,4 @@
 from fastapi import Depends
-from utils.response_wrapper import api_response
 from repository.student_repository import StudentRepository
 from validation.student_schema import StudentSchema
 from models.student_model import Personal_detail
@@ -17,13 +16,13 @@ class StudentService:
         return await self.student_repo.get_user(id)
         
     async def create_user(self, student: StudentSchema):
-        
+                
         try:
             new_user = Personal_detail(
                 name=student.name,
                 phone_number=student.phone_number,
                 email=student.email,
-                hashed_password = pwd_context.hash(student.hashed_password),
+                password = pwd_context.hash(student.password),
                 age=student.age
             )
             new_user = await self.student_repo.save_user(new_user)
