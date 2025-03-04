@@ -2,7 +2,7 @@ from fastapi import Depends
 from repository.student_repository import StudentRepository
 from validation.student_schema import StudentSchema
 from models.student_model import Personal_detail
-from auth.auth import pwd_context
+from auth.auth import hash_password
 
 class StudentService:
     
@@ -22,7 +22,7 @@ class StudentService:
                 name=student.name,
                 phone_number=student.phone_number,
                 email=student.email,
-                password = pwd_context.hash(student.password),
+                password = hash_password(student.password),
                 age=student.age
             )
             new_user = await self.student_repo.save_user(new_user)

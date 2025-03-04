@@ -7,3 +7,7 @@ pydantic[email]
 python-dotenv
 asyncmy
 starlette
+pydantic-settings
+python-jose
+passlib
+bcrypt

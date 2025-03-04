@@ -12,3 +12,11 @@ class AuthResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        
+class AuthTokenUserdata(BaseModel):
+    
+    id: str = None
+    name: str = None
+    email: str = None
+    phone_number: str = None
+    age: str = None
