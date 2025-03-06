@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import HTTPException, status
 
-from jose import jwt, JWTError, ExpiredSignatureError
+from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
@@ -54,16 +54,14 @@ def verify_access_token(token: str):
     )
     
     try:
-        # Decode the token
+
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM])
 
-        # Extract the 'sub' claim (which is the user id in our case)
         user_id: str = payload.get("sub")
 
         if user_id is None:
             raise credential_exception
 
-        # Extract other user data (if needed)
         user_data = {
             "id": user_id,
             "name": payload.get("name"),
@@ -72,9 +70,7 @@ def verify_access_token(token: str):
             "age": payload.get("age")
         }
         
-        # You can return the extracted user data
         return user_data
 
-    except JWTError as e:
-        print(f"JWT Error: {str(e)}")
-        raise credential_exception  # Raise the exception if there is an issue decoding the token
+    except JWTError:
+        raise credential_exception
